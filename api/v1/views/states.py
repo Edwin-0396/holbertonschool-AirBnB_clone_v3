@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 """ index file for flask """
 from crypt import methods
-from os import abort
 from api.v1.views import app_views
 from flask import jsonify
-from flask import Flask, request
+from flask import Flask, request, abort
 from models import storage
 from models.state import State
+
 
 @app_views.route('/states/', methods=['GET'], strict_slashes=False)
 def states_get(state_id=None):
@@ -31,12 +31,12 @@ def states_get_id(state_id=None):
 @app_views.route('/states/<state_id>', methods = ['DELETE'], strict_slashes = False)
 def status_delete(state_id=None):
 	"""Status delete"""
-	state_obj = storage.get(State, state_id)
-	if state_id == None:
+	state_obj = storage.get('State', state_id)
+	if state_obj is None:
 		abort(404)
 	state_obj.delete()
 	storage.save()
-	return ({}),200
+	return jsonify({}),200
 
 @app_views.route('/states', methods = ['POST'], strict_slashes = False)
 def states_post(state_id=None):
