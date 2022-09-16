@@ -23,7 +23,7 @@ def cities_get(state_id=None):
     for city in cities.values():
         if city.state_id == state_id:
             list.append(city.to_dict())
-    return jsonify(list), 200
+    return jsonify(list)
 
 
 @app_views.route('/cities/<city_id>', methods=['GET'], strict_slashes=False)
@@ -55,7 +55,7 @@ def cities_post(state_id=None):
     dic_state = storage.all(State)
     state = dic_state.get('State' + '.' + state_id)
     if state is None:
-        abort(400)
+        abort(404)
     result = request.get_json()
     if result is None:
         abort(400, {"Not a JSON"})
