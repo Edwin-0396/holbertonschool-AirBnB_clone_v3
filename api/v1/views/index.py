@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 """ index file for flask """
-from crypt import methods
 from api.v1.views import app_views
-from flask import jsonify, Blueprint
+from flask import jsonify
 from flask import Flask
 import os
 import models
@@ -14,10 +13,8 @@ from models.review import Review
 from models.state import State
 from models.user import User
 
-print("ON VIEWS_INDEX")
 
 app = Flask(__name__)
-
 
 @app_views.route('/status')
 def status():
