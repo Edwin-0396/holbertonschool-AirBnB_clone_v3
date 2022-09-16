@@ -3,7 +3,7 @@
 from api.v1.views import app_views
 from flask import jsonify
 from flask import Flask
-import models
+from models import storage
 from models.amenity import Amenity
 from models.city import City
 from models.place import Place
@@ -24,12 +24,10 @@ def status():
 @app_views.route('/stats', strict_slashes=False)
 def stats():
     """Stat"""
-    count = 0
     classes = {"amenities": Amenity, "cities": City,
                "places": Place, "reviews": Review,
                "states": State, "users": User}
     dict_count = {}
-    for CLS in classes:
-        count = models.storage.count(CLS)
-        dict_count[CLS] = count
+    for name, CLS in classes.items():
+        dict_count[name] = storage.count(CLS)
     return jsonify(dict_count)
