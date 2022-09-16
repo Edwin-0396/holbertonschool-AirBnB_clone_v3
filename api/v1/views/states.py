@@ -47,9 +47,9 @@ def states_post(state_id=None):
     """Status delete"""
     result = request.get_json()
     if result is None:
-        abort(404, {"Not a JSON"})
+        abort(400, {"Not a JSON"})
     if 'name' not in result:
-        abort(404, {"Missing name"})
+        abort(400, {"Missing name"})
     state_ins = State(name=result['name'])
     storage.new(state_ins)
     storage.save()
