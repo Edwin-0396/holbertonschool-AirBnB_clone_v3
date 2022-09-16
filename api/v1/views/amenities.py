@@ -3,7 +3,6 @@
 
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
-from holbertonschool-AirBnB_clone_v3.models import amenity
 from models import storage
 from models.amenity import Amenity
 
@@ -13,7 +12,7 @@ def retrieve_amenities(amenities):
     """Retrieves the list of all Amenity objects"""
     all_amenities = []
     for amenity in storage.all("Amenity").values():
-        amenities.append(amenity.to_dict())
+        all_amenities.append(amenity.to_dict())
     return jsonify(amenities)
 
 
