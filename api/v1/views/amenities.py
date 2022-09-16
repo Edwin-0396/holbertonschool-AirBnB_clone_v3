@@ -13,9 +13,9 @@ from models.amenity import Amenity
 
 @app_views.route('/amenities', methods=['GET'],
                  strict_slashes=False)
-def amenities_get(state_id=None):
+def amenities_get():
     """Retrieves the list of all City objects"""
-    amenities = storage.all("Amenity")
+    amenities = storage.all('Amenity')
     list = []
     for amenity in amenities.values():
         list.append(amenity.to_dict())
