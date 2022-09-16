@@ -48,7 +48,8 @@ def deletes_cities_by_id(city_id):
     return jsonify({}), 200
 
 
-@app_views.route('/states/<state_id>/cities', methods=['POST'], strict_slashes=False)
+@app_views.route('/states/<state_id>/cities', methods=['POST'],
+                 strict_slashes=False)
 def cities_post(state_id=None):
     """Status delete"""
     dic_state = storage.all(State)
