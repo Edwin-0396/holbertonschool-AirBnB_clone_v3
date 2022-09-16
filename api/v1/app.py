@@ -14,6 +14,7 @@ app.register_blueprint(app_views)
 def teardown_close(self):
     storage.close()
 
+
 if __name__ == "__main__":
     host = os.getenv('HBNB_API_HOST')
     port = os.getenv('HBNB_API_PORT')
