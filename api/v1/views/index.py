@@ -3,10 +3,8 @@
 from api.v1.views import app_views
 from flask import jsonify
 from flask import Flask
-import os
 import models
 from models.amenity import Amenity
-from models.base_model import BaseModel
 from models.city import City
 from models.place import Place
 from models.review import Review
@@ -23,7 +21,7 @@ def status():
     return jsonify({"status": "OK"})
 
 
-@app_views.route('/stats')
+@app_views.route('/stats', strict_slashes=False)
 def stats():
     """Stat"""
     count = 0
