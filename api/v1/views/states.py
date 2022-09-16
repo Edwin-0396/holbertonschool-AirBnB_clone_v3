@@ -22,7 +22,7 @@ def states_get(state_id=None):
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def states_get_id(state_id=None):
     """Status json"""
-    dict_all = storage.get("State")
+    dict_all = storage.all("State")
     list = []
     if state_id is not None:
         for states_values in dict_all.values():
