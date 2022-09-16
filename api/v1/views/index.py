@@ -27,8 +27,9 @@ def status():
 def stats():
     """Stat"""
     count = 0
-    classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
-               "Place": Place, "Review": Review, "State": State, "User": User}
+    classes = {"amenities": Amenity, "cities": City,
+               "places": Place, "reviews": Review,
+               "states": State, "users": User}
     dict_count = {}
     for CLS in classes:
         count = models.storage.count(CLS)
