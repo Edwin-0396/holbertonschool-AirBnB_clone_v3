@@ -4,7 +4,7 @@ from crypt import methods
 from os import abort
 from api.v1.views import app_views
 from flask import jsonify
-from flask import Flask, request
+from flask import Flask, request, abort
 from models import storage
 from models.state import State
 
@@ -28,15 +28,16 @@ def states_get_id(state_id=None):
 				return jsonify(states_values.to_dict())
 		abort(404)
 
-@app_views.route('/states/<state_id>', methods = ['DELETE'], strict_slashes = False)
-def status_delete(state_id=None):
-	"""Status delete"""
-	state_obj = storage.get(State, state_id)
-	if state_id == None:
-		abort(404)
-	state_obj.delete()
-	storage.save()
-	return ({}),200
+
+@app_views.route('/states/<st_id>', methods=['DELETE'], strict_slashes=False)
+def deletes_state_by_id(state_id):
+    state_obj = storage.get(State, state_id)
+    if not state_obj:
+        abort(404)
+    state_obj.delete()
+    storage.save()
+    return jsonify({}), 200
+
 
 @app_views.route('/states', methods = ['POST'], strict_slashes = False)
 def states_post(state_id=None):
@@ -50,3 +51,20 @@ def states_post(state_id=None):
 	storage.new(state_ins)
 	storage.save()
 	return jsonify(state_ins.to_dict()), 201
+
+
+@app_views.route('/states/<state_id>', methods = ['PUT'], strict_slashes = False)
+def put_states(state_id):
+	state_obj = storage.get(State, state_id)
+	if not state_obj:
+		abort(404)
+	if not request.get_json():
+		abort(400, {"Not a JSON"})
+	result = request.get_json()
+	for key, value in result.items():
+		if key in ['id', 'created_at', 'updated_at']:
+			continue
+		else:
+			setattr(state_obj, key, value)
+	storage.save()
+	return jsonify(state_obj.to_dict()), 200
