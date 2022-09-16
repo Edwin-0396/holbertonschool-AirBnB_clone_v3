@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""cities.py"""
+"""amenities.py"""
 
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
@@ -8,11 +8,11 @@ from models.amenity import Amenity
 
 
 @app_views.route('/amenities', methods=['GET'], strict_slashes=False)
-def retrieve_amenities(amenities):
+def retrieve_amenities():
     """Retrieves the list of all Amenity objects"""
-    all_amenities = []
+    amenities = []
     for amenity in storage.all("Amenity").values():
-        all_amenities.append(amenity.to_dict())
+        amenities.append(amenity.to_dict())
     return jsonify(amenities)
 
 
@@ -39,7 +39,7 @@ def del_amenity(amenity_id):
 
 
 @app_views.route('/amenities', methods=['POST'], strict_slashes=False)
-def create_amenity(amenities):
+def create_amenity():
     """Transform the HTTP request to a dictionary"""
     if not request.get_json():
         return make_response(jsonify({'error': 'Not a JSON'}), 400)
