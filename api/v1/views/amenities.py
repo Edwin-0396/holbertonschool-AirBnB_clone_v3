@@ -11,7 +11,7 @@ from models.city import City
 from models.amenity import Amenity
 
 
-@app_views.route('/amenities.py', methods=['GET'],
+@app_views.route('/amenities', methods=['GET'],
                  strict_slashes=False)
 def amenities_get(state_id=None):
     """Retrieves the list of all City objects"""
@@ -22,7 +22,8 @@ def amenities_get(state_id=None):
     return jsonify(list), 200
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['GET'], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>', methods=['GET'],
+                 strict_slashes=False)
 def amenity_get(amenity_id=None):
     """Status json"""
     amenities = storage.all("Amenities")
@@ -32,7 +33,8 @@ def amenity_get(amenity_id=None):
     return jsonify(amenity.to_dict()), 200
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>', methods=['DELETE'],
+                 strict_slashes=False)
 def deletes_amenity_by_id(amenity_id=None):
     amenity_obj = storage.get('Amenity', amenity_id)
     if not amenity_obj:
