@@ -22,13 +22,10 @@ def states_get(state_id=None):
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def states_get_id(state_id=None):
     """Status json"""
-    dict_all = storage.all("State")
-    list = []
+    dict_all = storage.get("State", state_id)
     if state_id is not None:
-        for states_values in dict_all.values():
-            if states_values.id == state_id:
-                return jsonify(states_values.to_dict())
-        abort(404)
+        return jsonify(dict_all.to_dict())
+    abort(404)
 
 
 @app_views.route('/states/<state_id>', methods=['DELETE'],
