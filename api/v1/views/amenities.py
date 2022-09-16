@@ -16,20 +16,22 @@ def retrieve_amenities(amenities):
     return jsonify(amenities)
 
 
-@app_views.route('amenities/<amenity_id>', methods=['GET'], strict_slashes=False)
+@app_views.route('/amenities/<string:amenity_id>', methods=['GET'],
+                 strict_slashes=False)
 def amenity_obj(amenity_id):
     """Retrieve an amenity object"""
     amenity = storage.get("Amenity", amenity_id)
-    if not amenity:
+    if amenity is None:
         abort(404)
     return jsonify(amenity.to_dict())
 
 
-@app_views.route('amenities/<amenity_id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route('/amenities/<string:amenity_id>', methods=['DELETE'],
+                 strict_slashes=False)
 def del_amenity(amenity_id):
     """Method to delete an amenity object"""
     amenity = storage.get("Amenity", amenity_id)
-    if not amenity:
+    if amenity is None:
         abort(404)
     amenity.delete()
     storage.save()
@@ -39,24 +41,21 @@ def del_amenity(amenity_id):
 @app_views.route('/amenities', methods=['POST'], strict_slashes=False)
 def create_amenity(amenities):
     """Transform the HTTP request to a dictionary"""
-    ameni = request.get_json()
-    if ameni is None:
-        abort(404)
     if not request.get_json():
         return make_response(jsonify({'error': 'Not a JSON'}), 400)
     if 'name' not in request.get_json():
         return make_response(jsonify({'error': 'Missing name'}), 400)
-    new_amenity = amenities.Amenity(**ameni)
-    storage.new(new_amenity)
-    storage.save()
-    return make_response(jsonify(new_amenity.to_dict()), 201)
+    amenity = Amenity(**request.get_json())
+    amenity.save()
+    return make_response(jsonify(amenity.to_dict()), 201)
 
 
-@app_views.route('amenities/<amenity_id>', methods=['PUT'], strict_slashes=False)
+@app_views.route('/amenities/<string:amenity_id>', methods=['PUT'],
+                 strict_slashes=False)
 def update_amenity(amenity_id):
     """updates an amenity object"""
     amenity = storage.get("Amenity", amenity_id)
-    if not amenity:
+    if amenity is None:
         abort(404)
     if not request.get_json():
         return make_response(jsonify({'error': 'Not a JSON'}), 400)
