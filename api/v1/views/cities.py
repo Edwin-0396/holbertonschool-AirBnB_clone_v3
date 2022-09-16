@@ -23,7 +23,7 @@ def cities_get(state_id=None):
     for city in cities.values():
         if city.state_id == state_id:
             list.append(city.to_dict())
-    return jsonify(list)
+    return jsonify(list), 200
 
 
 @app_views.route('/cities/<city_id>', methods=['GET'], strict_slashes=False)
@@ -34,7 +34,7 @@ def city_get(city_id=None):
     if city_id is not None:
         for states_values in dict_all.values():
             if states_values.id == city_id:
-                return jsonify(states_values.to_dict())
+                return jsonify(states_values.to_dict()), 200
         abort(404)
 
 
