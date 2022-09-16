@@ -16,17 +16,19 @@ from models.user import User
 
 app = Flask(__name__)
 
+
 @app_views.route('/status')
 def status():
     """Status json"""
-    return jsonify({"status":"OK"})
+    return jsonify({"status": "OK"})
+
 
 @app_views.route('/stats')
 def stats():
     """Stat"""
     count = 0
     classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
+               "Place": Place, "Review": Review, "State": State, "User": User}
     dict_count = {}
     for CLS in classes:
         count = models.storage.count(CLS)
@@ -35,4 +37,4 @@ def stats():
 
 
 if __name__ == "__main__":
-    app.run(host = '0.0.0.0', port='5000')
+    app.run(host='0.0.0.0', port='5000')
