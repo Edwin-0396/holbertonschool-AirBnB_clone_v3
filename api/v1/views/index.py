@@ -17,7 +17,7 @@ from models.user import User
 app = Flask(__name__)
 
 
-@app_views.route('/status')
+@app_views.route('/status', strict_slashes=False)
 def status():
     """Status json"""
     return jsonify({"status": "OK"})
@@ -34,7 +34,3 @@ def stats():
         count = models.storage.count(CLS)
         dict_count[CLS] = count
     return jsonify(dict_count)
-
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port='5000')
