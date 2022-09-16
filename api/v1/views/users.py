@@ -1,70 +1,81 @@
 #!/usr/bin/python3
-""" index file for flask """
-from crypt import methods
-from os import abort
-from api.v1.views import app_views
-from flask import jsonify
-from flask import Flask, request, abort
+"""script that starts a Flask web application"""
+
+
+from flask import Flask, jsonify, abort, request
 from models import storage
-from models.state import State
-
-@app_views.route('/states/', methods=['GET'], strict_slashes=False)
-def states_get(state_id=None):
-	"""Status json"""
-	dict_all = storage.all("State")
-	list = []
-	for states_values in dict_all.values():
-		list.append(states_values.to_dict())
-	return jsonify(list)
-
-@app_views.route('/states/<state_id>', methods = ['GET'], strict_slashes = False)
-def states_get_id(state_id=None):
-	"""Status json"""
-	dict_all = storage.all("State")
-	list = []
-	if state_id is not None:
-		for states_values in dict_all.values():
-			if states_values.id == state_id:
-				return jsonify(states_values.to_dict())
-		abort(404)
+from api.v1.views import app_views
+from models.user import User
+import os
+app = Flask(__name__)
 
 
-@app_views.route('/states/<state_id>', methods=['DELETE'], strict_slashes=False)
-def deletes_state_by_id(state_id):
-    state_obj = storage.get('State', state_id)
-    if not state_obj:
+@app_views.route('/users', methods=['GET'], strict_slashes=False)
+def get_users():
+    """Retrieves the list of all User objects"""
+    users = storage.all('User')
+    users_list = []
+    for user in users.values():
+        users_list.append(user.to_dict())
+    return jsonify(users_list), 200
+
+
+@app_views.route('/users/<user_id>', methods=['GET'],
+                 strict_slashes=False)
+def get_user(user_id=None):
+    """Retrieves a User object with the id linked to it"""
+    users = storage.all('User')
+    user = users.get('User' + "." + user_id)
+    if user is None:
         abort(404)
-    state_obj.delete()
-    storage.save()
+    else:
+        return jsonify(user.to_dict()), 200
+
+
+@app_views.route('/users/<user_id>',
+                 methods=['DELETE'], strict_slashes=False)
+def delete_user(user_id=None):
+    """Deletes a User object"""
+    obj = storage.get('User', user_id)
+    if obj is None:
+        abort(404)
+    else:
+        storage.delete(obj)
+        storage.save()
     return jsonify({}), 200
 
 
-@app_views.route('/states', methods = ['POST'], strict_slashes = False)
-def states_post(state_id=None):
-	"""Status delete"""
-	result = request.get_json()
-	if result is None:
-		abort(404, {"Not a JSON"})
-	if 'name' not in result:
-		abort(404, {"Missing name" })
-	state_ins = State(name=result['name'])
-	storage.new(state_ins)
-	storage.save()
-	return jsonify(state_ins.to_dict()), 201
+@app_views.route('/users', methods=['POST'], strict_slashes=False)
+def post_user():
+    """Creates a User"""
+    result = request.get_json()
+    if not result:
+        abort(400, {"Not a JSON"})
+    if 'email' not in result:
+        abort(400, {"Missing email"})
+    if 'password' not in result:
+        abort(400, {"Missing password"})
+    obj = User()
+    for key, value in result.items():
+        setattr(obj, key, value)
+    storage.new(obj)
+    storage.save()
+    return jsonify(obj.to_dict()), 201
 
 
-@app_views.route('/states/<state_id>', methods = ['PUT'], strict_slashes = False)
-def put_states(state_id):
-	state_obj = storage.get(State, state_id)
-	if not state_obj:
-		abort(404)
-	if not request.get_json():
-		abort(400, {"Not a JSON"})
-	result = request.get_json()
-	for key, value in result.items():
-		if key in ['id', 'created_at', 'updated_at']:
-			continue
-		else:
-			setattr(state_obj, key, value)
-	storage.save()
-	return jsonify(state_obj.to_dict()), 200
+@app_views.route('/users/<user_id>', methods=['PUT'],
+                 strict_slashes=False)
+def put_user(user_id=None):
+    """Updates a User object"""
+    result = request.get_json()
+    if not result:
+        abort(400, {"Not a JSON"})
+    obj = storage.get('User', user_id)
+    if obj is None:
+        abort(404)
+    invalid_keys = ["id", "email", "created_at", "updated_at"]
+    for key, value in result.items():
+        if key not in invalid_keys:
+            setattr(obj, key, value)
+    storage.save()
+    return jsonify(obj.to_dict()), 200
