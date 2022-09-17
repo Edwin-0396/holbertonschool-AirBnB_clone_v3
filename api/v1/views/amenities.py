@@ -2,7 +2,7 @@
 """ index file for flask """
 from os import abort
 from api.v1.views import app_views
-from flask import jsonify
+from flask import jsonify, make_response
 from flask import Flask, request, abort
 from models import storage
 from models.state import State
@@ -48,9 +48,9 @@ def amenities_post():
     """Status delete"""
     result = request.get_json()
     if result is None:
-        abort(400, {"Not a JSON"})
+        return make_response(jsonify({'error': 'Not a JSON'}), 400)
     if 'name' not in result:
-        abort(400, {"Missing name"})
+        return make_response(jsonify({'error': 'Missing name'}), 400)
     obj_amenity = Amenity(name=result['name'])
     storage.new(obj_amenity)
     storage.save()
