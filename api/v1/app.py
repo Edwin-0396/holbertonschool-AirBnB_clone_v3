@@ -6,7 +6,7 @@ from api.v1.views import app_views
 import os
 from flask_cors import CORS
 
-
+#Alejo get serious please
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 app.register_blueprint(app_views)
