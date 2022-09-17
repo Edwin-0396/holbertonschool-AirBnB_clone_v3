@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """ index file for flask """
-from crypt import methods
 from os import abort
 from api.v1.views import app_views
 from flask import jsonify
@@ -37,7 +36,7 @@ def amenity_get(amenity_id=None):
                  strict_slashes=False)
 def deletes_amenity_by_id(amenity_id=None):
     amenity_obj = storage.get('Amenity', amenity_id)
-    if not amenity_obj:
+    if amenity_obj is None:
         abort(404)
     amenity_obj.delete()
     storage.save()
