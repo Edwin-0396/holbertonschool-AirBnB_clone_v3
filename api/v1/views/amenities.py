@@ -61,15 +61,13 @@ def amenities_post():
                  strict_slashes=False)
 def put_amenities(amenity_id=None):
     result = request.get_json()
-    if not request.get_json():
-        abort(400, {"Not a JSON"})
     amenity_obj = storage.get("Amenity", amenity_id)
     if amenity_obj is None:
         abort(404)
+    if not request.get_json():
+        abort(400, {"Not a JSON"})
     for key, value in result.items():
-        if key in ['id', 'created_at', 'updated_at']:
-            continue
-        else:
+        if key not in ['id', 'created_at', 'updated_at']:
             setattr(amenity_obj, key, value)
-    storage.save()
+    amenity_obj.save()
     return jsonify(amenity_obj.to_dict()), 200
