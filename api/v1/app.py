@@ -10,7 +10,7 @@ from flask import jsonify, make_response
 app = Flask(__name__)
 app.register_blueprint(app_views)
 
-
+#Edit this teardown
 @app.teardown_appcontext
 def teardown_appcontext(self):
     storage.close()
